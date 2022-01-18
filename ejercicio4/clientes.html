@@ -504,14 +504,17 @@
                 </h6>
               </div>
               <div class="card-body">
-                <a href="crear_cliente.html" class="btn btn-primary btn-icon-split float-right">
+                <a
+                  href="crear_cliente.html"
+                  class="btn btn-primary btn-icon-split float-right"
+                >
                   <span class="icon text-white-50">
                     <i class="fas fa-flag"></i>
                   </span>
                   <span class="text">Agregar Cliente</span>
                 </a>
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <div class="table-responsive">
                   <table
                     class="table table-bordered"
@@ -526,10 +529,10 @@
                         <th>Email</th>
                         <th>Telefono</th>
                         <th>Detalle</th>
+                        <th>Acciones</th>
                       </tr>
                     </thead>
-                    <tbody>
-                    </tbody>
+                    <tbody></tbody>
                   </table>
                 </div>
               </div>
@@ -644,7 +647,7 @@
             cliente.detalle
           );
         }
-        $('#tablaClientes').DataTable();
+        $("#tablaClientes").DataTable();
       }
 
       function agregarClienteTabla(
@@ -661,7 +664,32 @@
                                             <td>${email}</td>
                                             <td>${telefono}</td>
                                             <td>${detalle}</td>
+                                            <td>
+                                              <a href="#" class="btn btn-danger btn-circle btn-sm" onClick = "eliminarCliente(${id})">
+                                                <i class="fas fa-trash"></i>
+                                              </a>
+                                              <a href="#" class="btn btn-primary btn-circle btn-sm" onClick = "eliminarCliente(${id})">
+                                                <i class="fas fa-edit"></i>
+                                              </a>
+                                            </td>
                                         </tr>`);
+      }
+
+      function eliminarCliente(id) {
+        var confirmacion = confirm("¿Seguro desea eliminar este cliente?");
+
+        if (confirmacion) {
+          fetch(
+            "http://localhost/php_curso/ejercicio4/php/eliminar.php?id=" + id,
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            }
+          ).then((respuesta) => window.location.reload());
+        }
       }
     </script>
   </body>
