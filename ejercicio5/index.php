@@ -2,11 +2,13 @@
 
     //this is a constant
     define("WELCOME", "NICE TO MEET YOU");
+    $selectedLanguage = "";
 
     if($_POST){
         //receive information from the html form
         $name = $_POST['txtName'];
-        echo "HI ". $name . " ". WELCOME;
+        $selectedLanguage = $_POST['language'];
+        echo "HI ". $name . " ". WELCOME . ", you like the language " . $selectedLanguage;
     }
 
 ?>
@@ -22,6 +24,10 @@
 <body>
     <form action="index.php" method="post">
         Name: <input type="text" name="txtName" id=""><br/>
+        Languages: <br/>
+        php: <input type="radio" name="language" value="php" <?php echo ($selectedLanguage=="php")?"checked":"";?>> <br/>
+        html: <input type="radio" name="language" value="html" <?php echo ($selectedLanguage=="html")?"checked":"";?>> <br/>
+        css: <input type="radio" name="language" value="css" <?php echo ($selectedLanguage=="css")?"checked":"";?>> <br/>
         <input type="submit" value="Send">
     </form>
 </body>
