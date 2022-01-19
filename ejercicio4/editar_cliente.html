@@ -494,46 +494,79 @@
           <!-- Begin Page Content -->
           <div class="container-fluid">
             <!-- Page Heading -->
-            <h1 class="h3 mb-2 text-gray-800">Clientes</h1>
+            <h1 class="h3 mb-2 text-gray-800">Editar cliente</h1>
 
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
               <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-primary">
-                  DataTables Example
+                  Ingrese los nuevos datos del cliente
                 </h6>
               </div>
               <div class="card-body">
-                <a
-                  href="crear_cliente.html"
-                  class="btn btn-primary btn-icon-split float-right"
-                >
-                  <span class="icon text-white-50">
-                    <i class="fas fa-flag"></i>
-                  </span>
-                  <span class="text">Agregar Cliente</span>
-                </a>
-                <br />
-                <br />
-                <div class="table-responsive">
-                  <table
-                    class="table table-bordered"
-                    id="tablaClientes"
-                    width="100%"
-                    cellspacing="0"
-                  >
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Telefono</th>
-                        <th>Detalle</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody></tbody>
-                  </table>
+                <div class="row">
+                  <div class="col-lg-7">
+                    <div class="p-5">
+                      <form class="user">
+                        <div class="form-group row">
+                          <div class="col-sm-6 mb-3 mb-sm-0">
+                            <input
+                              type="text"
+                              class="form-control form-control-user"
+                              id="txtNombre"
+                              placeholder="Nombre"
+                              required
+                            />
+                          </div>
+                          <div class="col-sm-6">
+                            <input
+                              type="text"
+                              class="form-control form-control-user"
+                              id="txtApellido"
+                              placeholder="Apellido"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group row">
+                          <div class="col-sm-6 mb-3 mb-sm-0">
+                            <input
+                              type="email"
+                              class="form-control form-control-user"
+                              id="txtEmail"
+                              placeholder="Email"
+                              required
+                            />
+                          </div>
+                          <div class="col-sm-6">
+                            <input
+                              type="text"
+                              class="form-control form-control-user"
+                              id="txtTelefono"
+                              placeholder="Telefono"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <input
+                            type="text"
+                            class="form-control form-control-user"
+                            id="txtDetalle"
+                            placeholder="Detalle"
+                            required
+                          />
+                        </div>
+                        <a
+                          href="clientes.html"
+                          class="btn btn-primary btn-user btn-block"
+                          id="btnEditarCliente"
+                        >
+                          Editar Cliente
+                        </a>
+                      </form>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -619,81 +652,56 @@
 
     <script>
       $(document).ready(function () {
-        consultarClientes();
+        $('#btnEditarCliente').click(editarCliente);
+        let id = window.location.href.split("id=")[1];
+        consultarCliente(id);
       });
 
-      function consultarClientes() {
-        fetch("http://localhost/php_curso/ejercicio4/php/consultar.php", {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-        })
+      function consultarCliente(id) {
+        fetch(
+          "http://localhost/php_curso/ejercicio4/php/consultar_cliente.php?id=" +
+            id,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
           .then((respuesta) => respuesta.json())
           .then((clientes) => {
-            agregarVariosClientesTabla(clientes);
+            cargarFormulario(clientes[0]);
           });
       }
 
-      function agregarVariosClientesTabla(clientes) {
-        for (var cliente of clientes) {
-          agregarClienteTabla(
-            cliente.id,
-            cliente.nombre,
-            cliente.apellido,
-            cliente.email,
-            cliente.telefono,
-            cliente.detalle
-          );
-        }
-        $("#tablaClientes").DataTable();
+      function cargarFormulario(cliente) {
+        $("#txtNombre").val(cliente.nombre);
+        $("#txtApellido").val(cliente.apellido);
+        $("#txtEmail").val(cliente.email);
+        $("#txtTelefono").val(cliente.telefono);
+        $("#txtDetalle").val(cliente.detalle);
       }
 
-      function agregarClienteTabla(
-        id,
-        nombre,
-        apellido,
-        email,
-        telefono,
-        detalle
-      ) {
-        $("#tablaClientes tbody").append(`<tr>
-                                            <td>${id}</td>
-                                            <td>${apellido + ", " + nombre}</td>
-                                            <td>${email}</td>
-                                            <td>${telefono}</td>
-                                            <td>${detalle}</td>
-                                            <td>
-                                              <a href="#" class="btn btn-danger btn-circle btn-sm" onClick = "eliminarCliente(${id})">
-                                                <i class="fas fa-trash"></i>
-                                              </a>
-                                              <a href="#" class="btn btn-primary btn-circle btn-sm" onClick = "editarCliente(${id})">
-                                                <i class="fas fa-edit"></i>
-                                              </a>
-                                            </td>
-                                        </tr>`);
-      }
+      function editarCliente(){
+        var id = window.location.href.split("id=")[1];
+        var nombre = $('#txtNombre').val();
+        var apellido = $('#txtApellido').val();
+        var email = $('#txtEmail').val();
+        var telefono = $('#txtTelefono').val();
+        var detalle = $('#txtDetalle').val();
 
-      function editarCliente(id){
-        window.location.href = 'editar_cliente.html?id='+id;
-      }
-
-      function eliminarCliente(id) {
-        var confirmacion = confirm("¿Seguro desea eliminar este cliente?");
-
-        if (confirmacion) {
-          fetch(
-            "http://localhost/php_curso/ejercicio4/php/eliminar.php?id=" + id,
-            {
-              method: "GET",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-            }
-          ).then((respuesta) => window.location.reload());
-        }
+        fetch(
+          `http://localhost/php_curso/ejercicio4/php/editar.php?nombre=${nombre}&apellido=${apellido}&email=${email}&telefono=${telefono}&detalle=${detalle}&id=${id}`,
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((respuesta) => alert("El cliente se actualizo correctamente"));
       }
     </script>
   </body>
